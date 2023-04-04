@@ -1,0 +1,82 @@
+﻿@model CinemaIS.Models.Movie
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>@Html.DisplayFor(model => model.Name)</h1>
+
+<div>
+    <h4>@Html.DisplayFor(model => model.ReleaseDate.Year)</h4>
+    <hr />
+
+    <div class="row">
+
+        <div class="col-md-4">
+            <img class="card-img" src="https://via.placeholder.com/300x400" alt="">
+        </div>
+        <div class="col">
+            <table class="table">
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.Duration)</th>
+                    <td>@Html.DisplayFor(model => model.Duration)</td>
+                </tr>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.ReleaseDate)</th>
+                    <td>@Html.DisplayFor(model => model.ReleaseDate)</td>
+                </tr>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.Rating)</th>
+                    <td>@Html.DisplayFor(model => model.Rating)</td>
+                </tr>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.Genres)</th>
+                    <td>...</td>
+                </tr>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.Countries)</th>
+                    <td>...</td>
+                </tr>
+            </table>
+            <p>
+                @Html.DisplayFor(model => model.Description)
+            </p>
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Время
+                </th>
+                <th>
+                    Зал
+                </th>
+                <th>
+
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Session session in Model.Sessions)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => session.DateTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => session.HallNumber)
+                    </td>
+                    <td>
+                        <a asp-controller="Sessions" asp-action="Details" asp-route-id="@session.Id">Подробнее</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
