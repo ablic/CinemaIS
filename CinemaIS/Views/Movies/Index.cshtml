@@ -1,14 +1,17 @@
 ﻿@model IEnumerable<CinemaIS.Models.Movie>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Афиша";
 }
 
-<h1>Index</h1>
+<h1>Сегодня в кино:</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+@if (User.IsInRole("admin"))
+{
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+}
 
 <div class="row row-cols-1 row-cols-md-4 g-4">
     @foreach (var movie in Model)
@@ -16,12 +19,15 @@
         <div class="col">
             <a asp-action="Details" asp-route-id="@movie.Id">
                 <div class="card text-center h-100">
-                    <img src="https://via.placeholder.com/300x400" class="card-img-top" alt="">
+                    <img src="@("~/images/" + movie.PosterUrl)" asp-append-version="true" class="card-img-top movie-poster" alt="@movie.Name">
                     <div class="card-body">
                         <h5 class="card-title">@movie.Name</h5>
-                        <a asp-action="Edit" asp-route-id="@movie.Id">Edit</a> |
-                        <a asp-action="Details" asp-route-id="@movie.Id">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@movie.Id">Delete</a>
+                        @if (User.IsInRole("admin"))
+                        {
+                            <a asp-action="Edit" asp-route-id="@movie.Id">Edit</a>
+                            <span>|</span>
+                            <a asp-action="Delete" asp-route-id="@movie.Id">Delete</a>
+                        }
                     </div>
                 </div>
             </a>

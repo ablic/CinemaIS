@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CinemaIS.Models
 {
@@ -11,11 +10,13 @@ namespace CinemaIS.Models
         [Display(Name = "Фильм")]
         public Movie? Movie { get; set; }
 
+        [Required(ErrorMessage = "Укажите дату проведения сеанса")]
         [Display(Name = "Дата и время")]
         public DateTime DateTime { get; set; }
 
-        [Display(Name = "Зал")]
-        public int HallNumber { get; set; }
+        [Display(Name = "Номер зала")]
+        public int HallId { get; set; }
+        public Hall? Hall { get; set; }
 
         public ICollection<Ticket> Tickets { get; set; }
 

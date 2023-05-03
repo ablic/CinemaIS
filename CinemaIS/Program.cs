@@ -11,23 +11,20 @@ namespace CinemaIS
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            //builder.Configuration.Bind("Halls", new Config());
-
-            // Add services to the container.
             builder.Services.AddControllersWithViews();
             
             builder.Services.AddDbContext<CinemaDbContext>(options => 
                 options.UseSqlServer(builder.Configuration.GetConnectionString("CinemaIS")));
 
-            
-
-            builder.Services.AddDefaultIdentity<Visitor>(options => 
-            {
-                options.SignIn.RequireConfirmedAccount = false;
-                options.Password.RequireDigit = false;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequiredLength = 4;
-            })
+            builder.Services
+                .AddDefaultIdentity<Visitor>(options => 
+                {
+                    options.SignIn.RequireConfirmedAccount = false;
+                    options.Password.RequireDigit = false;
+                    options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequiredLength = 4;
+                })
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<CinemaDbContext>();
 
             builder.Services.ConfigureApplicationCookie(opt =>
@@ -36,13 +33,13 @@ namespace CinemaIS
                 opt.LoginPath = new PathString("/Identity/Account/Login");
             });
 
+            
+            
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
