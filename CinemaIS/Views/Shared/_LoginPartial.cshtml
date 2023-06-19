@@ -12,7 +12,7 @@
                 var userId = UserManager.GetUserId(User);
                 var user = await UserManager.FindByIdAsync(userId);
             }
-        <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Добро пожаловать, @user.Name!</a>
+        <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Добро пожаловать, @user.UserName!</a>
     </li>
     <li class="nav-item">
         <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">

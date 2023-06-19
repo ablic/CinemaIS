@@ -6,10 +6,10 @@
 
 <h1>Сегодня в кино:</h1>
 
-@if (User.IsInRole("admin"))
+@if (User.IsInRole("admin") || User.IsInRole("manager"))
 {
     <p>
-        <a asp-action="Create">Create New</a>
+        <a asp-action="Create" class="link-warning">Добавить фильм</a>
     </p>
 }
 
@@ -17,17 +17,19 @@
     @foreach (var movie in Model)
     {
         <div class="col">
-            <a asp-action="Details" asp-route-id="@movie.Id">
+            <a asp-action="Details" asp-route-id="@movie.Id" class="text-decoration-none">
                 <div class="card text-center h-100">
                     <img src="@("~/images/" + movie.PosterUrl)" asp-append-version="true" class="card-img-top movie-poster" alt="@movie.Name">
                     <div class="card-body">
-                        <h5 class="card-title">@movie.Name</h5>
-                        @if (User.IsInRole("admin"))
-                        {
-                            <a asp-action="Edit" asp-route-id="@movie.Id">Edit</a>
-                            <span>|</span>
-                            <a asp-action="Delete" asp-route-id="@movie.Id">Delete</a>
-                        }
+                        <h5 class="card-title text-dark">@movie.Name</h5>
+                        <div>
+                            @if (User.IsInRole("admin") || User.IsInRole("manager"))
+                            {
+                                <a asp-action="Edit" asp-route-id="@movie.Id" class="link-warning">Редактировать</a>
+                                <span>|</span>
+                                <a asp-action="Delete" asp-route-id="@movie.Id" class="link-warning">Удалить</a>
+                            }
+                        </div>
                     </div>
                 </div>
             </a>

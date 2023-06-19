@@ -1,0 +1,73 @@
+﻿@model CinemaIS.ViewModels.Order
+
+@{
+    ViewData["Title"] = "Подтверждение покупки";
+}
+
+<ul class="nav nav-tabs mb-3">
+    <li class="nav-item">
+        <span class="nav-link">Выбор мест</span>
+    </li>
+    <li class="nav-item">
+        <span class="nav-link">Отправка билетов</span>
+    </li>
+    <li class="nav-item">
+        <span class="nav-link active">Подтверждение покупки</span>
+    </li>
+</ul>
+
+<div>
+    <h4>Проверьте указанные данные:</h4>
+    <dl class="row">
+        <dt class="col-sm-2">
+            Фильм
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Session.Movie.Name
+        </dd>
+        <dt class="col-sm-2">
+            Дата проведения сеанса
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Session.DateTime.ToString("dd.MM.yyyy")
+        </dd>
+        <dt class="col-sm-2">
+            Выбранные места
+        </dt>
+        <dd class="col-sm-10">
+            @foreach (var ticket in Model.SelectedTickets)
+            {
+                @(ticket.Place + "; ");
+            }
+        </dd>
+        <dt class="col-sm-2">
+            Электронная почта для отправки билетов
+        </dt>
+        <dd class="col-sm-10">
+            @Model.BuyerEmail
+        </dd>
+        <dt class="col-sm-2">
+            Итоговая сумма
+        </dt>
+        <dd class="col-sm-10">
+            @Model.SelectedTickets.Sum(t => t.Price) руб.
+        </dd>
+    </dl>
+</div>
+
+<form asp-action="CheckOrder">
+    <input type="hidden" asp-for="@Model.Session.Id" />
+    <input type="hidden" asp-for="@Model.Session.MovieId" />
+    <input type="hidden" asp-for="@Model.Session.DateTime" />
+    <input type="hidden" asp-for="@Model.BuyerEmail" />
+    @for (int i = 0; i < Model.SelectedTickets.Count; i++)
+    {
+        <input type="hidden" asp-for="@Model.SelectedTickets[i].Id"/>
+        <input type="hidden" asp-for="@Model.SelectedTickets[i].SessionId"/>
+        <input type="hidden" asp-for="@Model.SelectedTickets[i].Place"/>
+        <input type="hidden" asp-for="@Model.SelectedTickets[i].Price"/>
+    }
+    <div class="form-group">
+        <input type="submit" value="Подтвердить" class="btn btn-primary" />
+    </div>
+</form>

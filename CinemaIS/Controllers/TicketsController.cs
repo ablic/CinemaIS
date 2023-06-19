@@ -22,11 +22,13 @@ namespace CinemaIS.Controllers
             _userManager = userManager;
         }
 
+
         public async Task<IActionResult> Index()
         {
             var cinemaDbContext = _context.Tickets.Include(t => t.Session);
             return View(await cinemaDbContext.ToListAsync());
         }
+
 
         public async Task<IActionResult> Details(int? id)
         {
@@ -47,11 +49,13 @@ namespace CinemaIS.Controllers
             return View(ticket);
         }
 
+
         public IActionResult Create()
         {
             ViewData["SessionId"] = new SelectList(_context.Sessions, "Id", "Id");
             return View();
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -66,6 +70,7 @@ namespace CinemaIS.Controllers
             ViewData["SessionId"] = new SelectList(_context.Sessions, "Id", "Id", ticket.SessionId);
             return View(ticket);
         }
+
 
         public async Task<IActionResult> Edit(int? id)
         {
@@ -82,6 +87,7 @@ namespace CinemaIS.Controllers
             ViewData["SessionId"] = new SelectList(_context.Sessions, "Id", "Id", ticket.SessionId);
             return View(ticket);
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -116,6 +122,7 @@ namespace CinemaIS.Controllers
             return View(ticket);
         }
 
+
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Tickets == null)
@@ -135,6 +142,7 @@ namespace CinemaIS.Controllers
             return View(ticket);
         }
 
+
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -153,48 +161,10 @@ namespace CinemaIS.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [Authorize]
-        public async Task<IActionResult> Buy(int? id)
-        {
-            if (id == null || _context.Tickets == null)
-                return NotFound();
-
-            var ticket = await _context.Tickets.FindAsync(id);
-
-            if (ticket == null)
-                return NotFound();
-
-            return View(ticket);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize]
-        public async Task<IActionResult> Buy(int id, [Bind("Id,SessionId,Row,Seat,Price")] Ticket ticket)
-        {
-            if (id != ticket.Id)
-                return NotFound();
-
-            if (ModelState.IsValid)
-            {
-                Visitor? visitor = await _userManager.GetUserAsync(HttpContext.User);
-
-                if (visitor == null)
-                    return NotFound();
-
-                visitor.Tickets.Add(ticket);
-                _context.Update(visitor);
-                await _context.SaveChangesAsync();
-
-                return RedirectToAction(nameof(Index));
-            }
-
-            return View(ticket);
-        }
 
         private bool TicketExists(int id)
         {
-          return (_context.Tickets?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Tickets?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

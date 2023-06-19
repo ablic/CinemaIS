@@ -1,4 +1,5 @@
 ﻿using CinemaIS.Models;
+using CinemaIS.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,8 @@ namespace CinemaIS.Controllers
 {
     public class MoviesController : Controller
     {
+        public const int SessionTabsCount = 6;
+
         private readonly CinemaDbContext _context;
         private readonly UserManager<Visitor> _userManager;
         private readonly IWebHostEnvironment _webHostEnvironment;
@@ -25,26 +28,33 @@ namespace CinemaIS.Controllers
         {
             return _context.Movies != null 
                 ? View(await _context.Movies.ToListAsync())
-                : Problem("Entity set 'CinemaDbContext.Movies'  is null.");
+                : Problem("Entity set 'CinemaDbContext.Movies' is null.");
         }
 
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, DateTime? date)
         {
             if (id == null || _context.Movies == null)
-            {
                 return NotFound();
-            }
 
             var movie = await _context.Movies
                 .Include(m => m.Sessions)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (movie == null)
-            {
                 return NotFound();
-            }
 
-            return View(movie);
+            var sessions = _context.Sessions
+                .Where(s => s.MovieId == movie.Id)
+                .Include(s => s.Movie)
+                .Include(s => s.Tickets);
+
+            date ??= DateTime.Today;
+
+            return View(new MovieWithSessionTabs
+            {
+                Movie = movie,
+                SessionsByDateTabs = await SessionsByDateTabUtility.GetTabsAsync((DateTime)date, sessions)
+            });
         }
 
         public IActionResult Create()
@@ -55,7 +65,7 @@ namespace CinemaIS.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
-            [Bind("Id,Name,Duration,ReleaseDate,Rating,Description")] Movie movie,
+            [Bind("Id,Name,Genres,Countries,Duration,ReleaseDate,AgeLimit,Description")] Movie movie,
             IFormFile? poster)
         {
             if (ModelState.IsValid)
@@ -67,21 +77,20 @@ namespace CinemaIS.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             return View(movie);
         }
 
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Movies == null)
-            {
                 return NotFound();
-            }
 
             var movie = await _context.Movies.FindAsync(id);
+
             if (movie == null)
-            {
                 return NotFound();
-            }
+
             return View(movie);
         }
 
@@ -89,7 +98,7 @@ namespace CinemaIS.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(
             int id, 
-            [Bind("Id,Name,Duration,ReleaseDate,Rating,Description")] Movie movie,
+            [Bind("Id,Name,Genres,Countries,Duration,ReleaseDate,AgeLimit,Description")] Movie movie,
             IFormFile poster)
         {
             if (id != movie.Id)
@@ -137,6 +146,7 @@ namespace CinemaIS.Controllers
 
             var movie = await _context.Movies
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (movie == null)
             {
                 return NotFound();
@@ -153,6 +163,7 @@ namespace CinemaIS.Controllers
             {
                 return Problem("Entity set 'CinemaDbContext.Movies'  is null.");
             }
+
             var movie = await _context.Movies.FindAsync(id);
             if (movie != null)
             {
@@ -177,7 +188,9 @@ namespace CinemaIS.Controllers
                 Path.GetExtension(image.FileName);
 
             using (FileStream fileStream = new FileStream(Path.Combine(wwwRootPath, "images", name), FileMode.Create))
+            {
                 await image.CopyToAsync(fileStream);
+            }
 
             return name;
         }

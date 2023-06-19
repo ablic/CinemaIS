@@ -9,15 +9,15 @@ namespace CinemaIS.Models
 
 
         [Display(Name = "Название")]
-        public string Name { get; set; } = "[NAMELESS]";
+        public string Name { get; set; } = string.Empty;
 
 
-        [Display(Name = "Жанры")]
-        public ICollection<Genre> Genres { get; set; }
+        [Display(Name = "Жанры (разделять запятыми без пробелов)")]
+        public string Genres { get; set; } = string.Empty;
 
 
-        [Display(Name = "Страны")]
-        public ICollection<Country> Countries { get; set; }
+        [Display(Name = "Страны (разделять запятыми без пробелов)")]
+        public string Countries { get; set; } = string.Empty;
 
 
         [Range(1, 300)]
@@ -26,13 +26,13 @@ namespace CinemaIS.Models
 
 
         [DataType(DataType.Date)]
-        [Display(Name = "Дата выхода")]
+        [Display(Name = "Дата выхода в прокат")]
         public DateTime ReleaseDate { get; set; }
 
 
-        [Precision(3, 1)]
-        [Display(Name = "Рейтинг")]
-        public decimal? Rating { get; set; }
+        [Range(0, 18)]
+        [Display(Name = "Возрастное ограничение")]
+        public int AgeLimit { get; set; }
 
 
         [Display(Name = "Описание")]
@@ -49,8 +49,6 @@ namespace CinemaIS.Models
 
         public Movie()
         {
-            Genres = new List<Genre>();
-            Countries = new List<Country>();
             Sessions = new List<Session>();
         }
     }

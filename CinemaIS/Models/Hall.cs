@@ -1,4 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using CinemaIS.ViewModels;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Xml.Linq;
 
 namespace CinemaIS.Models
 {
@@ -6,17 +10,10 @@ namespace CinemaIS.Models
     {
         public int Id { get; set; }
 
+
         [DataType(DataType.MultilineText)]
-        public string Schema { get; set; } =
-            "xxxxxxxxxx\n" +
-            "xxxxxxxxxx\n" +
-            "xxxxxxxxxx\n" +
-            "xxxxxxxxxx\n" +
-            "xxxxxxxxxx\n" +
-            "xxxxxxxxxx\n" +
-            "xxxxxxxxxx\n" +
-            "xxxxxxxxxx\n" +
-            "xxxxxxxxxx\n" +
-            "xxxxxxxxxx\n";
+        public string Schema { get; set; } = string.Empty;
+
+        
     }
 }

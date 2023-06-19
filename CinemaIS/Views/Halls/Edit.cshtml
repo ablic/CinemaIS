@@ -4,9 +4,7 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
-
-<h4>Hall</h4>
+<h4>Редактирование макета зала</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -18,15 +16,15 @@
                 <textarea asp-for="Schema" class="form-control"></textarea>
                 <span asp-validation-for="Schema" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+            <div class="form-group mt-2">
+                <input type="submit" value="Сохранить" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Назад к списку залов</a>
 </div>
 
 @section Scripts {

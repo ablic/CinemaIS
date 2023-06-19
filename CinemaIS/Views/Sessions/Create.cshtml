@@ -1,21 +1,17 @@
 ﻿@model CinemaIS.Models.Session
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Добавление сеанса";
 }
 
-<h1>Create</h1>
+<h1>Добавление сеанса для фильма "@ViewBag.MovieName"</h1>
 
-<h4>Session</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="MovieId" class="control-label"></label>
-                <select asp-for="MovieId" class ="form-control" asp-items="ViewBag.MovieId"></select>
-            </div>
+            <input type="hidden" asp-for="MovieId"/>
             <div class="form-group">
                 <label asp-for="DateTime" class="control-label"></label>
                 <input asp-for="DateTime" class="form-control" />
@@ -24,6 +20,11 @@
             <div class="form-group">
                 <label asp-for="HallId" class="control-label"></label>
                 <select asp-for="HallId" class="form-control" asp-items="ViewBag.HallId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="MinPrice" class="control-label"></label>
+                <input asp-for="MinPrice" class="form-control" />
+                <span asp-validation-for="MinPrice" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

@@ -4,9 +4,8 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
 
-<h4>Movie</h4>
+<h4>Добавление фильма</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -18,8 +17,18 @@
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Genres" class="control-label"></label>
+                <input asp-for="Genres" class="form-control" />
+                <span asp-validation-for="Genres" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Countries" class="control-label"></label>
+                <input asp-for="Countries" class="form-control" />
+                <span asp-validation-for="Countries" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="Duration" id="movie-duration-label" class="control-label"></label>
-                <input asp-for="Duration" oninput="onSliderChanged(this.value)" value="120" type="range" id="movie-duration-slider" class="form-range" min="1" max="300" />
+                <input asp-for="Duration" class="form-control" min="1" max="300" />
                 <span asp-validation-for="Duration" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -28,9 +37,9 @@
                 <span asp-validation-for="ReleaseDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Rating" class="control-label"></label>
-                <input asp-for="Rating" class="form-control" />
-                <span asp-validation-for="Rating" class="text-danger"></span>
+                <label asp-for="AgeLimit" id="movie-duration-label" class="control-label"></label>
+                <input asp-for="AgeLimit" class="form-control" min="1" max="300" />
+                <span asp-validation-for="AgeLimit" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
@@ -42,14 +51,14 @@
                 <input type="file" name="poster" class="form-control" accept="image/*" /><br>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Создать" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Назад к афише</a>
 </div>
 
 @section Scripts {

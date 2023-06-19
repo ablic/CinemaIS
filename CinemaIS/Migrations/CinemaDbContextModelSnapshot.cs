@@ -22,43 +22,6 @@ namespace CinemaIS.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("CinemaIS.Models.Country", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("FullName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Country");
-                });
-
-            modelBuilder.Entity("CinemaIS.Models.Genre", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Genre");
-                });
-
             modelBuilder.Entity("CinemaIS.Models.Hall", b =>
                 {
                     b.Property<int>("Id")
@@ -84,11 +47,22 @@ namespace CinemaIS.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("AgeLimit")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Countries")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Duration")
                         .HasColumnType("int");
+
+                    b.Property<string>("Genres")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -96,10 +70,6 @@ namespace CinemaIS.Migrations
 
                     b.Property<string>("PosterUrl")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal?>("Rating")
-                        .HasPrecision(3, 1)
-                        .HasColumnType("decimal(3,1)");
 
                     b.Property<DateTime>("ReleaseDate")
                         .HasColumnType("datetime2");
@@ -123,6 +93,9 @@ namespace CinemaIS.Migrations
                     b.Property<int>("HallId")
                         .HasColumnType("int");
 
+                    b.Property<decimal>("MinPrice")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<int>("MovieId")
                         .HasColumnType("int");
 
@@ -143,14 +116,15 @@ namespace CinemaIS.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("OwnerEmail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Place")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("Row")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Seat")
-                        .HasColumnType("int");
 
                     b.Property<int>("SessionId")
                         .HasColumnType("int");
@@ -191,10 +165,6 @@ namespace CinemaIS.Migrations
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -244,45 +214,30 @@ namespace CinemaIS.Migrations
                             Email = "admin@email.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
-                            Name = "Администратор",
                             NormalizedEmail = "ADMIN@EMAIL.COM",
-                            NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAELtlWXR1vHVqzylwGuizLOM/NM+WIRrwnR1Es3E/38C+sRu4zX8icPswMtKnYejbhA==",
+                            NormalizedUserName = "АДМИНИСТРАТОР",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFmVHFuogHLxR4Zn0OPYrUIgq/dVOzP/BVGrAYZpIr11LYoE0iLeCA2qWVlDYVS1PQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
-                            UserName = "admin"
+                            UserName = "Администратор"
+                        },
+                        new
+                        {
+                            Id = "aaaaaaaa-3d13-433f-bc24-fcf769b6e6e7",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "",
+                            Email = "manager@email.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "MANAGER@EMAIL.COM",
+                            NormalizedUserName = "МЕНЕДЖЕР",
+                            PasswordHash = "AQAAAAIAAYagAAAAEIREu8LrMfZzUciLXm1CZpaQ0TxFOCJsfx6rE48kpeKTmzZFw/97hbUVyifhxDEVyg==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "",
+                            TwoFactorEnabled = false,
+                            UserName = "Менеджер"
                         });
-                });
-
-            modelBuilder.Entity("CountryMovie", b =>
-                {
-                    b.Property<int>("CountriesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MoviesId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CountriesId", "MoviesId");
-
-                    b.HasIndex("MoviesId");
-
-                    b.ToTable("CountryMovie");
-                });
-
-            modelBuilder.Entity("GenreMovie", b =>
-                {
-                    b.Property<int>("GenresId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MoviesId")
-                        .HasColumnType("int");
-
-                    b.HasKey("GenresId", "MoviesId");
-
-                    b.HasIndex("MoviesId");
-
-                    b.ToTable("GenreMovie");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -317,6 +272,12 @@ namespace CinemaIS.Migrations
                             Id = "6b7bf0ac-b815-455a-8908-8133983c9200",
                             Name = "admin",
                             NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = "66666666-b815-455a-8908-8133983c9200",
+                            Name = "manager",
+                            NormalizedName = "MANAGER"
                         });
                 });
 
@@ -413,6 +374,11 @@ namespace CinemaIS.Migrations
                         {
                             UserId = "aa6c0c49-3d13-433f-bc24-fcf769b6e6e7",
                             RoleId = "6b7bf0ac-b815-455a-8908-8133983c9200"
+                        },
+                        new
+                        {
+                            UserId = "aaaaaaaa-3d13-433f-bc24-fcf769b6e6e7",
+                            RoleId = "66666666-b815-455a-8908-8133983c9200"
                         });
                 });
 
@@ -464,41 +430,13 @@ namespace CinemaIS.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CinemaIS.Models.Visitor", null)
+                    b.HasOne("CinemaIS.Models.Visitor", "Visitor")
                         .WithMany("Tickets")
                         .HasForeignKey("VisitorId");
 
                     b.Navigation("Session");
-                });
 
-            modelBuilder.Entity("CountryMovie", b =>
-                {
-                    b.HasOne("CinemaIS.Models.Country", null)
-                        .WithMany()
-                        .HasForeignKey("CountriesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CinemaIS.Models.Movie", null)
-                        .WithMany()
-                        .HasForeignKey("MoviesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("GenreMovie", b =>
-                {
-                    b.HasOne("CinemaIS.Models.Genre", null)
-                        .WithMany()
-                        .HasForeignKey("GenresId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CinemaIS.Models.Movie", null)
-                        .WithMany()
-                        .HasForeignKey("MoviesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Visitor");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

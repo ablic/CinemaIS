@@ -1,0 +1,91 @@
+﻿@model CinemaIS.ViewModels.Seat[][]
+
+@{
+    ViewData["Title"] = "Выбор мест";
+}
+
+<ul class="nav nav-tabs mb-3">
+    <li class="nav-item">
+        <span class="nav-link actie">Выбор мест</span>
+    </li>
+    <li class="nav-item">
+        <span class="nav-link disabled">Отправка билетов</span>
+    </li>
+    <li class="nav-item">
+        <span class="nav-link disabled">Подтверждение покупки</span>
+    </li>
+</ul>
+
+<form asp-action="ChooseSeats">
+
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="d-grid gap-2">
+
+        @for (int i = 0; i < Model.Length; i++)
+        {
+            <div class="d-flex justify-content-between">
+                @{
+                    int row = i + 1;
+                }
+                @row
+                <div class="d-flex justify-content-center gap-2">
+
+                    @for (int j = 0; j < Model[i].Length; j++)
+                    {
+                        int seat = j + 1;
+
+                        if (Model[i][j].LeftGap > 0f)
+                        {
+                            <div style="width: @(Model[i][j].LeftGap * 25)px"></div>
+                        }
+
+                        <span class="d-inline-block"
+                              tabindex="0"
+                              data-bs-toggle="tooltip"
+                              title="@(
+                                    $"Ряд: {row}, Место: {seat}\n" +
+                                    $"Цена: {Model[i][j].Price} руб.")">
+
+                            @if (Model[i][j].IsOccupied)
+                            {
+                                <input type="hidden" asp-for="@Model[i][j].IsSelected" />
+                                <button type="button" class="btn btn-sm btn-danger disabled">
+                                    @seat
+                                </button>
+                            }
+                            else
+                            {
+                                <input type="checkbox"
+                                       asp-for="@Model[i][j].IsSelected"
+                                       class="btn-check seat"
+                                       id="btn-check-@(row + "-" + seat)"
+                                       autocomplete="off"
+                                       data-price="@Model[i][j].Price">
+
+                                <label asp-for="@Model[i][j].IsSelected"
+                                       class="btn btn-outline-success btn-sm"
+                                       for="btn-check-@(row + "-" + seat)">
+                                    @seat
+                                </label>
+                            }
+                        </span>
+
+                        if (Model[i][j].RightGap > 0f)
+                        {
+                            <div style="width: @(Model[i][j].RightGap * 25)px"></div>
+                        }
+                    }
+                </div>
+                @row
+            </div>
+        }
+    </div>
+
+    <div class="d-flex justify-content-between">
+        <a asp-controller="Sessions" asp-action="Index">Назад к сеансам</a>
+        <input type="submit" value="Продолжить" class="btn btn-primary" />
+    </div>
+</form>
+
+<script src="~/js/seat-selection.js" asp-append-version="true"></script>

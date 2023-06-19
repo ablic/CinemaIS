@@ -2,6 +2,7 @@ using CinemaIS.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using CinemaIS.TagHelpers;
 
 namespace CinemaIS
 {
@@ -12,9 +13,10 @@ namespace CinemaIS
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddControllersWithViews();
+            builder.Services.AddSession();
             
             builder.Services.AddDbContext<CinemaDbContext>(options => 
-                options.UseSqlServer(builder.Configuration.GetConnectionString("CinemaIS")));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("CinemaISFinal")));
 
             builder.Services
                 .AddDefaultIdentity<Visitor>(options => 
@@ -32,8 +34,6 @@ namespace CinemaIS
                 opt.AccessDeniedPath = new PathString("/Identity/Account/AccessDenied");
                 opt.LoginPath = new PathString("/Identity/Account/Login");
             });
-
-            
             
             var app = builder.Build();
 
@@ -47,6 +47,8 @@ namespace CinemaIS
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseSession();
 
             app.UseAuthentication();
             app.UseAuthorization();

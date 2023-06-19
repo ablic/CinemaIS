@@ -1,82 +1,90 @@
-﻿@model CinemaIS.Models.Movie
+﻿@model CinemaIS.ViewModels.MovieWithSessionTabs
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = Model.Movie.Name;
 }
 
-<h1>@Html.DisplayFor(model => model.Name)</h1>
-
 <div>
-    <h4>@Html.DisplayFor(model => model.ReleaseDate.Year)</h4>
-    <hr />
-
+    <h1>
+        @Model.Movie.Name
+        <span class="badge bg-secondary">@Model.Movie.AgeLimit+</span>
+    </h1>
+    <h4>@Model.Movie.ReleaseDate.Year</h4>
+    @if (User.IsInRole("admin"))
+    {
+        <a asp-action="Edit" asp-route-id="@Model.Movie?.Id" class="text-danger">
+            Редактировать
+        </a>
+    }
+</div>
+<hr />
+<div>
     <div class="row">
 
         <div class="col-md-4">
-            <img class="card-img movie-poster" src="@("~/images/" + Model.PosterUrl)" asp-append-version="true" alt="">
+            <img class="card-img movie-poster" src="@("~/images/" + Model.Movie.PosterUrl)" asp-append-version="true" alt="">
         </div>
         <div class="col">
             <table class="table">
                 <tr>
-                    <th>@Html.DisplayNameFor(model => model.Duration)</th>
-                    <td>@Html.DisplayFor(model => model.Duration)</td>
+                    <th>Продолжительность</th>
+                    <td>@Model.Movie.Duration</td>
                 </tr>
                 <tr>
-                    <th>@Html.DisplayNameFor(model => model.ReleaseDate)</th>
-                    <td>@Html.DisplayFor(model => model.ReleaseDate)</td>
+                    <th>Жанры</th>
+                    <td>@Model.Movie.Genres.Replace(",", ", ")</td>
                 </tr>
                 <tr>
-                    <th>@Html.DisplayNameFor(model => model.Rating)</th>
-                    <td>@Html.DisplayFor(model => model.Rating)</td>
+                    <th>Страны</th>
+                    <td>@Model.Movie.Countries.Replace(",", ", ")</td>
                 </tr>
                 <tr>
-                    <th>@Html.DisplayNameFor(model => model.Genres)</th>
-                    <td>...</td>
-                </tr>
-                <tr>
-                    <th>@Html.DisplayNameFor(model => model.Countries)</th>
-                    <td>...</td>
+                    <th>Дата выхода в прокат</th>
+                    <td>@Model.Movie.ReleaseDate.ToString("dd.MM.yyyy")</td>
                 </tr>
             </table>
             <p>
-                @Html.DisplayFor(model => model.Description)
+                @Model.Movie.Description
             </p>
         </div>
     </div>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    Время
-                </th>
-                <th>
-                    Зал
-                </th>
-                <th>
-
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (Session session in Model.Sessions)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => session.DateTime)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => session.HallId)
-                    </td>
-                    <td>
-                        <a asp-controller="Sessions" asp-action="Details" asp-route-id="@session.Id">Подробнее</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
 </div>
+<hr />
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <h3>Сеансы</h3>
+    <ul class="nav nav-pills mb-2" id="myTab" role="tablist">
+        @foreach (var tab in Model.SessionsByDateTabs)
+        {
+            <li class="nav-item" role="presentation">
+                <button class="nav-link @(tab.Sessions.Count == 0 ? "disabled" : "")"
+                        id="@tab.HtmlId-tab" data-bs-toggle="tab" data-bs-target="#@tab.HtmlId"
+                        type="button" role="tab" aria-controls="@tab.HtmlId" aria-selected="false">
+                    @tab.Title
+                </button>
+            </li>
+        }
+    </ul>
+
+    <div class="tab-content" id="myTabContent">
+        @foreach (var tab in Model.SessionsByDateTabs)
+        {
+            <div class="tab-pane fade" id="@tab.HtmlId" role="tabpanel" aria-labelledby="@tab.HtmlId-tab">
+                @foreach (var session in tab.Sessions)
+                {
+                    <a class="btn btn-primary" role="button" 
+                    asp-controller="Orders"
+                    asp-action="ChooseSeats" 
+                    asp-route-sessionId="@session.Id">
+                        @session.DateTime.ToString("hh:mm")
+                        <br>
+                        <span class="badge bg-info text-dark">@session.MinPrice ₽</span>
+                    </a>
+                }
+            </div>
+        }
+    </div>
+</div>
+<hr />
+<div>
+    <a asp-action="Index">Назад к афише</a>
 </div>
